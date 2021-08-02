@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.lnd.exceptionhandling.controller.exceptions.UserNotFoundException;
 import com.lnd.exceptionhandling.model.User;
 import com.lnd.exceptionhandling.service.UserDataService;
 
@@ -41,12 +42,12 @@ public class UserDataController {
 	@GetMapping(path = "/getuser/{id}")
 	public ResponseEntity<Object> getUserData(
 										@PathVariable("id") final Long id) {
-		ResponseEntity<Object> responseEntity;
+		ResponseEntity<Object> responseEntity = null;
 		User user = userDataService.getUser(id); 
 		if (null != user) {
 			responseEntity = ResponseEntity.ok(user); 
 		} else {
-			responseEntity = ResponseEntity.notFound().build(); 
+			throw new UserNotFoundException("id = " + id);
 		}		
 		return responseEntity; 
 	}
